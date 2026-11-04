@@ -14,7 +14,7 @@ export const site = {
   url: 'https://mishanyao.github.io',
   title: 'Mike Olianenko, Product Engineer',
   description:
-    'Product Engineer in Melbourne building construction sustainability software. TypeScript, React, tests and AI agents.',
+    'Product Engineer in Melbourne building construction software. TypeScript, React, tests and AI agents.',
   linkedin: 'https://www.linkedin.com/in/mikhail-olianenko/',
   github: 'https://github.com/MishanyaO',
 };
