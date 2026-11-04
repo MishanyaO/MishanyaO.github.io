@@ -1,0 +1,73 @@
+.progress { position: sticky; top: 0; z-index: 20; height: 4px; background: var(--line); }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); }
+@supports (animation-timeline: scroll()) {
+  .progress i { width: 100%; transform-origin: 0 50%; transform: scaleX(0); animation: grow linear both; animation-timeline: scroll(root block); }
+  @keyframes grow { to { transform: scaleX(1); } }
+}
+:root { --body-size: 19px; }
+:root[data-size='-1'] { --body-size: 17px; }
+:root[data-size='1'] { --body-size: 22px; }
+
+.post-top { max-width: 1120px; margin: 0 auto; padding: 16px 24px 0; }
+.back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; }
+.post-head { max-width: 820px; display: flex; flex-direction: column; gap: 18px; padding: 12px 0 36px; }
+.post-head h1 { margin: 0; font-family: var(--fd); font-weight: 700; font-size: clamp(32px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -0.03em; }
+.byline-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+.by { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex: none; }
+.by span.t { font-size: 15px; color: var(--muted); }
+.by strong { color: var(--ink); font-weight: 600; }
+.sizes { display: none; align-items: center; gap: 8px; }
+.js .sizes { display: flex; }
+.sizes .lbl { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.sizes button { min-width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; }
+.sizes button#size-up { font-size: 17px; }
+.sizes button:disabled { opacity: 0.45; cursor: default; }
+
+.tldr { max-width: 820px; margin-bottom: 48px; padding: 22px 24px; border-radius: 20px; background: var(--soft); }
+.tldr h2 { margin: 0 0 10px; font-family: var(--fm); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.tldr ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 17px; line-height: 1.5; }
+
+.post-row { display: flex; flex-wrap: wrap; gap: 32px 56px; align-items: flex-start; }
+.toc { flex: 1 1 200px; max-width: 240px; min-width: 0; padding: 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.toc h2 { margin: 0 0 8px; }
+.toc div { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+.toc a { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--muted); text-decoration: none; }
+.toc a[aria-current='true'] { color: var(--accent); font-weight: 600; }
+.toc a[aria-current='true']::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+
+.post-col { flex: 999 1 520px; min-width: 0; max-width: 680px; }
+.prose { font-family: var(--fs); font-size: var(--body-size); line-height: 1.7; }
+.prose > :first-child { margin-top: 0; }
+.prose h2 { margin: 2em 0 0.6em; font-family: var(--fd); font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; scroll-margin-top: 24px; }
+.prose > h2:first-child { margin-top: 0; }
+.prose h3 { margin: 1.8em 0 0.5em; font-family: var(--fd); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; scroll-margin-top: 24px; }
+.prose p { margin: 0 0 1.2em; }
+.prose ul, .prose ol { margin: 0 0 1.2em; padding-left: 1.3em; }
+.prose li + li { margin-top: 0.4em; }
+.prose a { color: var(--accent); }
+.prose code { font-family: var(--fm); font-size: 0.82em; background: var(--soft); color: var(--ink); padding: 0.1em 0.4em; border-radius: 6px; }
+.prose pre { margin: 1.6em 0; padding: 18px 16px; border-radius: 16px; overflow-x: auto; background: #0a0b0f !important; font-family: var(--fm); font-size: 14px; line-height: 1.65; }
+.prose pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+.prose blockquote { margin: 2em 0; padding: 0; font-family: var(--fd); font-size: clamp(24px, 3.2vw, 32px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.prose blockquote::before { content: '\201C'; display: block; font-size: 72px; line-height: 0.7; color: var(--accent); }
+.prose blockquote p { margin: 0; }
+.prose figure { margin: 1.6em 0; }
+.prose figcaption { margin-top: 10px; font-family: var(--fu); font-size: 14px; line-height: 1.5; color: var(--muted); }
+.prose .callout { margin: 1.6em 0; padding: 18px 20px; border-radius: 16px; background: var(--soft); font-family: var(--fu); font-size: 16px; line-height: 1.55; }
+
+.comments { margin-top: 56px; scroll-margin-top: 24px; font-family: var(--fu); }
+.comments h2 { margin: 0 0 16px; font-family: var(--fd); font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+
+.more-writing { margin-top: 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.more-writing a { display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink); min-height: 44px; }
+.more-writing a:hover { border-color: var(--accent); color: var(--ink); }
+.more-writing .ttl { font-family: var(--fd); font-size: 20px; font-weight: 700; line-height: 1.2; }
+
+.author { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px; border-radius: 20px; background: var(--soft); }
+.author .big { width: 56px; height: 56px; background: var(--surface); font-size: 18px; }
+.author .txt { flex: 1 1 220px; min-width: 0; }
+.author .nm { font-family: var(--fd); font-size: 18px; font-weight: 700; }
+.author .ds { font-size: 15px; }
+.author a { color: var(--accent); font-weight: 600; }
+.post-end { height: 72px; }

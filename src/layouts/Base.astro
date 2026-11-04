@@ -1,0 +1,92 @@
+---
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/dm-sans';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+import { site } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  home?: boolean;
+  type?: 'website' | 'article';
+}
+const { title = site.title, description = site.description, home = false, type = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const p = home ? '' : '/';
+---
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0e0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f2f5" media="(prefers-color-scheme: light)" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Mike Olianenko" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_AU" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var t = null, s = null;
+        try { t = localStorage.getItem('theme'); s = localStorage.getItem('textStep'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        d.setAttribute('data-theme', t);
+        if (s === '-1' || s === '1') d.setAttribute('data-size', s);
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#top">Skip to content</a>
+    <header class="site-header">
+      <a class="mono-logo" href={home ? '#top' : '/'} aria-label="MO, Home">MO</a>
+      <nav class="nav" aria-label="Primary">
+        <a href={`${p}#writing`}>Writing</a>
+        <a href="https://www.linkedin.com/in/mikhail-olianenko/">LinkedIn</a>
+        <button type="button" id="theme-toggle" class="theme-btn" aria-label="Switch to light mode">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        </button>
+      </nav>
+    </header>
+    <slot name="after-header" />
+    <main id="top" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="in">
+        <span>Mike Olianenko · Melbourne</span>
+        <a href="https://www.linkedin.com/in/mikhail-olianenko/">LinkedIn</a>
+      </div>
+    </footer>
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        var b = document.getElementById('theme-toggle');
+        function label() {
+          b.setAttribute('aria-label', d.getAttribute('data-theme') === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        }
+        label();
+        b.addEventListener('click', function () {
+          var n = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          d.setAttribute('data-theme', n);
+          try { localStorage.setItem('theme', n); } catch (e) {}
+          label();
+          window.dispatchEvent(new CustomEvent('themechange', { detail: n }));
+        });
+      })();
+    </script>
+  </body>
+</html>

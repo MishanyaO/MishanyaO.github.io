@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+facts.md
+internal/
+test-results/
+playwright-report/
+.lighthouseci/
