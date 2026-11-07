@@ -9,7 +9,8 @@ const posts = defineCollection({
     tag: z.string(),
     summary: z.string(),
     date: z.coerce.date(),
-    draft: z.boolean().default(false),
+    // Every article is a draft until the "Publish article" workflow flips this to false.
+    draft: z.boolean().default(true),
     takeaways: z.array(z.string()).max(5).optional(),
   }),
 });

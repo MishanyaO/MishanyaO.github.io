@@ -1,0 +1,68 @@
+name: Publish article
+
+# The "publish button": run this from the Actions tab (Run workflow).
+# It flips one article from draft to published on main and then starts
+# the normal build, test and deploy workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Article file name without .md (for example i-stopped-coding-this-year)
+        required: true
+        type: string
+      set_date_today:
+        description: Set the article date to today
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Set draft to false
+        env:
+          SLUG: ${{ inputs.slug }}
+          SET_DATE_TODAY: ${{ inputs.set_date_today }}
+        run: |
+          set -euo pipefail
+          if [ "$SET_DATE_TODAY" = "true" ]; then
+            node scripts/publish-article.mjs "$SLUG"
+          else
+            node scripts/publish-article.mjs "$SLUG" --keep-date
+          fi
+
+      - name: Commit and push to main
+        env:
+          SLUG: ${{ inputs.slug }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/posts
+          git commit -m "Publish article: $SLUG"
+          git push origin HEAD:main
+
+      # Pushes made with GITHUB_TOKEN do not start other workflows,
+      # so start the deploy workflow explicitly.
+      - name: Start build and deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
