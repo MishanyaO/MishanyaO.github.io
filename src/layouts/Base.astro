@@ -10,8 +10,11 @@ interface Props {
   description?: string;
   home?: boolean;
   type?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
 }
-const { title = site.title, description = site.description, home = false, type = 'website' } = Astro.props;
+const { title = site.title, description = site.description, home = false, type = 'website', image, imageAlt = '' } = Astro.props;
+const imageUrl = image ? new URL(image, site.url).href : undefined;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const p = home ? '' : '/';
 ---
@@ -31,7 +34,10 @@ const p = home ? '' : '/';
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="en_AU" />
-    <meta name="twitter:card" content="summary" />
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    {imageUrl && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <script is:inline>

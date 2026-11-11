@@ -71,3 +71,6 @@
 .author .ds { font-size: 15px; }
 .author a { color: var(--accent); font-weight: 600; }
 .post-end { height: 72px; }
+
+.cover { margin: 0 0 28px; }
+.cover img { display: block; width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); }

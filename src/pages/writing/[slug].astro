@@ -20,7 +20,7 @@ const { Content, headings } = await render(post);
 const toc = headings.filter((h) => h.depth === 2);
 const commentsOn = Boolean(giscus.repoId && giscus.categoryId);
 ---
-<Base title={`${post.data.title} | Mike Olianenko`} description={post.data.summary} type="article">
+<Base title={`${post.data.title} | Mike Olianenko`} description={post.data.summary} type="article" image={post.data.cover} imageAlt={post.data.coverAlt}>
   <div slot="after-header" class="progress" aria-hidden="true"><i></i></div>
 
   <div class="post-top">
@@ -42,6 +42,12 @@ const commentsOn = Boolean(giscus.repoId && giscus.categoryId);
         </div>
       </div>
     </div>
+
+    {post.data.cover && (
+      <figure class="cover">
+        <img src={post.data.cover} alt={post.data.coverAlt ?? ''} width="1200" height="630" />
+      </figure>
+    )}
 
     {post.data.takeaways && post.data.takeaways.length > 0 && (
       <div class="tldr">
