@@ -22,9 +22,9 @@ takeaways:
 
 AI makes it easy to write code. It also makes it easy to write too much of it.
 
-Not long ago I found out how much. I asked Claude Code to clean up an AI agent I had been building, one that can carry out tasks for users and guide them around the app. Three hours later the codebase had gone from 10,000 lines to 3,000, and the tests still passed.
+Not long ago I found out how much. I asked Claude Code to clean up an AI agent I had been building, one that can carry out tasks for users and guide them around the app. Three hours later the codebase had gone from 10,000 lines to 3,000.
 
-The agent got better, too. The workflows that used to stop halfway when the data was messy became cleaner.
+The agent got better, too. It became faster and its answers made more sense. The workflows that used to stop halfway when the data was messy now finish.
 
 I had sensed that something was off. I had not realised how much. This article is about how complexity sneaks in, and what we changed afterwards.
 
@@ -50,7 +50,7 @@ The simplest way I can say it: less code, less room for bugs.
 
 ## The switch
 
-Six months ago we moved to Claude Code entirely. At that time I was working on my first ever agent prototype and the thing I remember is the cleanup of that prototype. I had felt for a while that it had too much code, too many helpers and handlers. I asked Cursor to clean it up multiple times, but I could not get it done properly. Claude Code did it in one session, about three hours, and the tests kept passing. It was one of the first moments I thought: I can trust this. Not entirely, but mostly.
+Six months ago we moved to Claude Code entirely. At that time I was working on my first ever agent prototype and the thing I remember is the cleanup of that prototype. I had felt for a while that it had too much code, too many helpers and handlers. I asked Cursor to clean it up multiple times, but I could not get it done properly. Claude Code did it in one session, about three hours. It also removed tests that tested nothing useful and helped me improve the evals. It was one of the first moments I thought: I can trust this. Not entirely, but mostly.
 
 Then came the real change, which was a decision, not a feature. I said to myself: I know how to code, but now I trust you. Writing the code is your responsibility.
 

@@ -44,16 +44,24 @@
   };
 
   // reveal
-  const io = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+  // Normally an element reveals once 15% of it is on screen. An element taller than the viewport
+  // (the article body) may never get there, so it reveals as soon as any part is visible.
+  const onHit = (entries, obs) => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const el = e.target;
       if (el.hasAttribute('data-rise')) el.classList.add('in');
       if (el.dataset.count) count(el);
-      io.unobserve(el);
+      obs.unobserve(el);
     });
-  }, { threshold: 0.15 }) : null;
-  document.querySelectorAll('[data-rise],[data-count]').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+  };
+  const hasIO = 'IntersectionObserver' in window;
+  const io = hasIO ? new IntersectionObserver(onHit, { threshold: 0.15 }) : null;
+  const ioTall = hasIO ? new IntersectionObserver(onHit, { threshold: 0 }) : null;
+  document.querySelectorAll('[data-rise],[data-count]').forEach(el => {
+    if (!hasIO) return el.classList.add('in');
+    (el.offsetHeight > window.innerHeight ? ioTall : io).observe(el);
+  });
 
   // reading progress + active TOC
   const bar = document.querySelector('.progress i');
