@@ -1,16 +1,14 @@
 (() => {
   const root = document.documentElement;
   const KEY = 'theme';
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
   const apply = (pref) => {
-    const t = pref === 'auto' || !pref ? (mq.matches ? 'dark' : 'light') : pref;
+    const t = pref === 'light' ? 'light' : 'dark'; // dark by default
     root.dataset.theme = t;
     document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeSet === (pref || 'auto'))));
   };
-  const get = () => localStorage.getItem(KEY) || 'auto';
+  const get = () => localStorage.getItem(KEY) || 'dark';
   const set = (p) => { localStorage.setItem(KEY, p); apply(p); };
   apply(get());
-  mq.addEventListener('change', () => get() === 'auto' && apply('auto'));
   document.querySelectorAll('[data-theme-set]').forEach(b => b.addEventListener('click', () => set(b.dataset.themeSet)));
   document.querySelectorAll('[data-theme-toggle]').forEach(b => b.addEventListener('click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark')));
 

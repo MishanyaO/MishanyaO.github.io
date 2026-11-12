@@ -39,8 +39,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <meta name="theme-color" content="#f7f9f9" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0b0f12" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#0b0f12" />
   <meta property="og:type" content={type} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
@@ -54,10 +53,10 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <meta name="twitter:description" content={description} />
   <script is:inline>
     (function () {
-      var p = 'auto';
-      try { p = localStorage.getItem('theme') || 'auto'; } catch (e) {}
-      var d = p === 'dark' || (p === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-      document.documentElement.dataset.theme = d ? 'dark' : 'light';
+      // Dark is the default; only an explicit "light" choice (saved by the theme button) overrides it.
+      var p = 'dark';
+      try { p = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.dataset.theme = p === 'light' ? 'light' : 'dark';
       document.documentElement.classList.add('js');
     })();
   </script>
