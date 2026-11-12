@@ -1,0 +1,126 @@
+---
+// Article page body from the "Blog design overhaul" design; the shell (header, footer,
+// drawer, theme, fonts) lives in SiteLayout.astro.
+import type { MarkdownHeading } from 'astro';
+import SiteLayout from './SiteLayout.astro';
+import { site, giscus } from '../config';
+import { formatDate, shortDate, readingMinutes, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
+  newer?: Post;
+  older?: Post;
+}
+const { post, headings, newer, older } = Astro.props;
+const { title, summary, tag, date, cover, coverAlt, figures = [] } = post.data;
+
+const toc = headings.filter((h) => h.depth === 2);
+const pad = (n: number) => String(n).padStart(2, '0');
+const fmt = (n: number) => n.toLocaleString('en-AU');
+
+const counted = figures.filter((f) => f.count != null).slice(0, 2);
+const commentsOn = Boolean(giscus.repoId && giscus.categoryId);
+---
+<SiteLayout variant="post" type="article" title={`${title} · Mike Olianenko`} description={summary} image={cover} imageAlt={coverAlt}>
+  <main id="top" class="article" tabindex="-1">
+    <article class="a-main">
+      <div class="a-kicker mono" data-rise><span class="t">{tag.toUpperCase()}</span> · {shortDate(date)} · {readingMinutes(post.body)} MIN</div>
+      <h1 class="a-title" data-rise style="--d:100ms">{title}</h1>
+      <div class="a-author" data-rise style="--d:180ms"><img src="/photo.jpg" alt="" width="28" height="28" /><span>Mike Olianenko · {formatDate(date)}</span></div>
+
+      {counted.length > 0 && (
+        <div class="figs-m mono" data-rise style="--d:240ms">
+          {counted.map((f) => (
+            <div><span>{(f.mobileLabel ?? f.label).toUpperCase()}</span><span class={f.tone}><span data-count={f.count}>{fmt(f.count!)}</span></span></div>
+          ))}
+        </div>
+      )}
+
+      {toc.length > 0 && (
+        <details class="toc-m mono">
+          <summary><span>▸ On this page</span><span>{toc.length}</span></summary>
+          <nav class="toc" aria-label="On this page">
+            {toc.map((h, i) => <a href={`#${h.slug}`}>{pad(i + 1)} {h.text}</a>)}
+          </nav>
+        </details>
+      )}
+
+      <div class="prose" id="post-body" data-rise style="--d:300ms"><slot /></div>
+
+      {commentsOn && (
+        <section id="comments" class="comments"
+          data-repo={giscus.repo} data-repo-id={giscus.repoId}
+          data-category={giscus.category} data-category-id={giscus.categoryId}
+          data-mapping={giscus.mapping}>
+          <h2>Comments</h2>
+          <div id="giscus-host"></div>
+        </section>
+      )}
+
+      {(newer || older) && (
+        <nav class="more-writing" aria-label="More writing">
+          {older && (<a href={`/writing/${older.id}/`}><span class="k mono">Previous</span><span class="ttl">{older.data.title}</span></a>)}
+          {newer && (<a href={`/writing/${newer.id}/`}><span class="k mono">Next</span><span class="ttl">{newer.data.title}</span></a>)}
+        </nav>
+      )}
+
+      <div class="author-box"><img src="/photo.jpg" alt="" width="48" height="48" /><div><b>Mike Olianenko</b><br /><span style="color:var(--muted)">Product Engineer in Melbourne.</span> <a href={site.linkedin} style="color:var(--accent)">Find me on LinkedIn ↗</a></div></div>
+    </article>
+
+    <aside class="a-side mono" aria-label="Key figures and contents">
+      <div class="sticky">
+        {figures.length > 0 && (
+          <>
+            <div class="label">Key figures</div>
+            {figures.map((f) => (
+              <div class="fig"><span>{f.label}</span><span class={f.tone}>{f.count != null
+                ? <><span data-count={f.count}>{fmt(f.count)}</span>{f.unit ? ` ${f.unit}` : ''}</>
+                : f.value}</span></div>
+            ))}
+          </>
+        )}
+        {toc.length > 0 && (
+          <>
+            <div class="label" style="border-bottom:none">Contents</div>
+            <nav class="toc" aria-label="On this page">
+              {toc.map((h, i) => <a href={`#${h.slug}`}>{pad(i + 1)} {h.text}</a>)}
+            </nav>
+          </>
+        )}
+      </div>
+    </aside>
+  </main>
+
+  {commentsOn && (
+    <script slot="end" is:inline>
+      (function () {
+        var c = document.getElementById('comments');
+        if (!c) return;
+        var d = document.documentElement;
+        var theme = function () { return d.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; };
+        var loaded = false;
+        var load = function () {
+          if (loaded) return; loaded = true;
+          var s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.async = true; s.crossOrigin = 'anonymous';
+          var a = { 'data-repo': c.dataset.repo, 'data-repo-id': c.dataset.repoId, 'data-category': c.dataset.category,
+            'data-category-id': c.dataset.categoryId, 'data-mapping': c.dataset.mapping, 'data-strict': '0',
+            'data-reactions-enabled': '1', 'data-emit-metadata': '0', 'data-input-position': 'top',
+            'data-theme': theme(), 'data-lang': 'en', 'data-loading': 'lazy' };
+          for (var k in a) s.setAttribute(k, a[k]);
+          document.getElementById('giscus-host').appendChild(s);
+        };
+        if ('IntersectionObserver' in window) {
+          var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '400px' });
+          o.observe(c);
+        } else { load(); }
+        new MutationObserver(function () {
+          var f = document.querySelector('iframe.giscus-frame');
+          if (f && f.contentWindow) f.contentWindow.postMessage({ giscus: { setConfig: { theme: theme() } } }, 'https://giscus.app');
+        }).observe(d, { attributes: true, attributeFilter: ['data-theme'] });
+      })();
+    </script>
+  )}
+</SiteLayout>
