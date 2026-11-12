@@ -21,7 +21,7 @@ takeaways:
 
 AI makes it easy to write code. It also makes it easy to write too much of it.
 
-Not long ago I found out how much. I asked Claude Code to clean up an AI agent I had been building, one that can carry out tasks for users and guide them around the app. Three hours later the codebase had gone from 10,000 lines to 3,000.
+Six months ago I found out how much. I asked Claude Code to clean up an AI agent I had been building, one that can carry out tasks for users and guide them around the app. Three hours later the codebase had gone from 10,000 lines to 3,000.
 
 The agent got better, too. It became faster and its answers made more sense. The workflows that used to stop halfway when the data was messy now finish.
 
@@ -39,7 +39,7 @@ That voice made us controlling. We used one agent and watched every single chang
 
 ## Why watching every change did not help
 
-Here is the part that bothers me. I watched those changes. Each one looked fine. And the prototype still ended up with 7,000 lines it did not need.
+Here is the part that bothers me. The agent from the start of this article was built exactly like that, in Cursor, with one agent and every change watched. Each change looked fine. And the codebase still ended up with 7,000 lines it did not need.
 
 John Ousterhout in his *A Philosophy of Software Design* says complexity is anything that makes a system hard to understand and hard to change. And it does not arrive in one big step. It arrives in many small ones, each looking harmless. He also has a name for a programmer who produces a lot of quick, shaky code: a tactical tornado.
 
@@ -49,7 +49,7 @@ The simplest way I can say it: less code, less room for bugs.
 
 ## The switch
 
-Six months ago we moved to Claude Code entirely. At that time I was working on my first ever agent prototype and the thing I remember is the cleanup of that prototype. I had felt for a while that it had too much code, too many helpers and handlers. I asked Cursor to clean it up multiple times, but I could not get it done properly. Claude Code did it in one session, about three hours. It also removed tests that tested nothing useful and helped me improve the evals. It was one of the first moments I thought: I can trust this. Not entirely, but mostly.
+Around that time we moved to Claude Code entirely, and the cleanup of that agent is what I remember most. I had felt for a while that it had too much code, too many helpers and handlers. I asked Cursor to clean it up multiple times, but I could not get it done properly. Claude Code did it in one session. It also removed tests that tested nothing useful and helped me improve the evals. It was one of the first moments I thought: I can trust this. Not entirely, but mostly.
 
 Then came the real change, which was a decision, not a feature. I said to myself: I know how to code, but now I trust you. Writing the code is your responsibility.
 
@@ -67,9 +67,9 @@ If the agent can be a tactical tornado, our work is to keep the system simple. F
 
 Notice where the human time goes now: the beginning and the end. We plan, and we review. The middle, where the code gets written, is the part that became fast.
 
-## Back to the prototype
+## Back to the agent
 
-When I look at that prototype now, I do not see one big mistake. I see many small changes that each made sense, and nobody asking whether the whole thing was still simple. That was the job I had not understood yet.
+When I look at that agent now, I do not see one big mistake. I see many small changes that each made sense, and nobody asking whether the whole thing was still simple. That was the job I had not understood yet.
 
 Today the agent writes the code, and my job is to keep it small, clear and checked. If I did it again, I would switch earlier and trust the AI a little more. The attention I spent watching every change would have been better spent on the plan and the review.
 
