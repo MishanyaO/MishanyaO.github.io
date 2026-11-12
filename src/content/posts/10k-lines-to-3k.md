@@ -1,11 +1,18 @@
 ---
 title: '10k LOCs to 3k: how complexity sneaks into AI-built code'
 tag: Agentic development
+shortTag: Agentic dev
+result: { arrow: ▼, count: 70, decimals: 1, suffix: '% LOC' }
 summary: Claude Code cut my agent prototype from 10,000 lines to 3,000 in about three hours, and the agent got better. Here is how complexity sneaks in, and the three habits we built afterwards.
 date: 2026-11-12
 draft: true
 cover: /images/10k-lines-to-3k.png
 coverAlt: Two code blocks side by side. The left one is tall and labelled 10,000 lines. The right one is about a third of the size and labelled 3,000 lines.
+figures:
+  - { label: Before, count: 10000, unit: lines, tone: bad }
+  - { label: After, count: 3000, unit: lines, tone: good, mobileLabel: After · 3h }
+  - { label: Time, value: ~3 hours }
+  - { label: Tests, value: passing }
 takeaways:
   - 'AI makes it easy to write code, and just as easy to write too much of it.'
   - 'Reviewing every change did not keep the prototype simple. Complexity arrives in many small steps that each look fine.'

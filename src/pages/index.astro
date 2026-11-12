@@ -1,87 +1,68 @@
 ---
-import fs from 'node:fs';
-import Base from '../layouts/Base.astro';
-import { getPosts, formatDate, readingTime } from '../lib/posts';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site } from '../config';
+import { getPosts, shortDate, readingMinutes } from '../lib/posts';
 
-const hasPhoto = fs.existsSync('public/photo.jpg');
-const showPlaceholder = !hasPhoto && import.meta.env.DEV;
 const posts = await getPosts();
-
-const stackMain = ['TypeScript', 'React', 'AWS'];
-const stackMore = ['Playwright', 'Jest', 'Storybook', 'MUI', 'Postgres'];
-
+const fmt = (n: number, dec = 0) =>
+  n.toLocaleString('en-AU', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 ---
-<Base home>
-  <section class="bento">
-    <div class="col-main">
-    <div class="hero">
-      <h1>Mike Olianenko</h1>
-      <p class="headline">Product Engineer · Building software since 2022</p>
-      <p class="tagline">Agentic Development | TypeScript, React, AWS</p>
-    </div>
-
-
-    <div class="about">
-      <h2 class="label">About</h2>
-      <p class="lead">I build the software that construction teams run on, end to end: from the conversation with the people who use it to the last review. The goal is always the same: less time on admin, more on the work that matters.</p>
-      <p>Getting there takes more than code. Coding is no longer the bottleneck; planning, organising, testing, shipping and maintaining are, and that’s where I put my time while agents handle much of the typing.</p>
-      <p>I write about what I learn building with agents.</p>
-    </div>
-
-    </div>
-
-    <div class="col-side">
-      <div class="stack">
-        <h2 class="label">Stack</h2>
-        <div class="chips">
-          {stackMain.map((s) => <span class="chip chip-strong">{s}</span>)}
-          {stackMore.map((s) => <span class="chip chip-quiet">{s}</span>)}
+<SiteLayout variant="home">
+  <main id="top" tabindex="-1">
+    <section class="hero rel">
+      <div class="hero-main">
+        <div class="who" data-rise>
+          <img src="/photo.jpg" alt="Mike Olianenko" width="44" height="44" />
+          <div class="mono">Mike Olianenko<br />Product Engineer · since 2022</div>
+        </div>
+        <div class="who-m">
+          <img src="/photo.jpg" alt="Mike Olianenko" width="64" height="64" />
+          <div><b>Mike Olianenko</b><span class="mono">Product Engineer · Melbourne</span><span class="mono status">● open to chat</span></div>
+        </div>
+        <h1 class="title" data-rise style="--d:100ms">I build construction software end to end, <span class="hl">and write about building it with agents.</span></h1>
+        <div class="contacts mono">
+          <a href={site.linkedin}>LinkedIn <span class="arr">↗</span></a>
+          <a href={site.github}>GitHub <span class="arr">↗</span></a>
         </div>
       </div>
-      <div class={`photo-card${hasPhoto ? '' : showPlaceholder ? ' ph' : ' bare'}`}>
-        {hasPhoto && <img src="/photo.jpg" alt="Mike Olianenko" width="720" height="1086" decoding="async" />}
-        {showPlaceholder && <span>[Your photo]</span>}
-        <div class="icons">
-          <a class="icon-btn primary" href="https://www.linkedin.com/in/mikhail-olianenko/" aria-label="LinkedIn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
-          </a>
-          <a class="icon-btn" href="https://github.com/MishanyaO" aria-label="GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.921.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
-          </a>
-          <a class="icon-btn" id="email-link" aria-label="Email" hidden>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
-          </a>
+      <aside class="panel" data-rise style="--d:200ms" aria-label="Stack and links">
+        <div class="label mono">Stack</div>
+        <ul class="stack mono">
+          <li><span class="k lang">lang</span><span class="v">TypeScript</span></li>
+          <li><span class="k ui">ui</span><span class="v">React · MUI · Storybook</span></li>
+          <li><span class="k infra">infra</span><span class="v">AWS · Postgres</span></li>
+          <li><span class="k test">test</span><span class="v">Playwright · Jest</span></li>
+        </ul>
+        <div class="links mono">
+          <a href={site.linkedin}>LinkedIn<span class="arr">↗</span></a>
+          <a href={site.github}>GitHub<span class="arr">↗</span></a>
         </div>
-      </div>
-    </div>
-  </section>
+      </aside>
+    </section>
 
-  <section id="writing" class="section last">
-    <h2>Writing</h2>
-    {posts.length === 0 ? (
-      <p class="soon">Longer pieces coming.</p>
-    ) : (
-      <div class="cards">
-        {posts.map((p) => (
-          <article class="card">
-            <span class="chip">{p.data.tag}</span>
-            <h3><a href={`/writing/${p.id}/`}>{p.data.title}</a></h3>
-            <p>{p.data.summary}</p>
-            <p class="when">{formatDate(p.data.date)} · {readingTime(p.body)}</p>
-            <div class="foot"><a class="more" href={`/writing/${p.id}/`}>Read more</a></div>
-          </article>
-        ))}
-      </div>
-    )}
-  </section>
+    <section class="writing" id="writing" aria-labelledby="writing-h">
+      <div class="wlabel mono"><span id="writing-h">WRITING</span><span>{posts.length}</span></div>
+      <div class="thead mono" aria-hidden="true"><span>DATE</span><span>ESSAY</span><span>TOPIC</span><span class="r">RESULT</span><span class="r">READ</span></div>
 
-  <script is:inline>
-    (function () {
-      var a = document.getElementById('email-link');
-      if (!a) return;
-      var parts = ['mikhail.olianenko', 'gmail', 'com'];
-      a.href = 'mail' + 'to:' + parts[0] + '@' + parts[1] + '.' + parts[2];
-      a.hidden = false;
-    })();
-  </script>
-</Base>
+      {posts.length === 0 && <p class="more mono">Longer pieces coming.</p>}
+
+      {posts.map((p, i) => {
+        const r = p.data.result;
+        const mins = readingMinutes(p.body);
+        return (
+          <a class="post" href={`/writing/${p.id}/`} data-rise style={`--d:${300 + i * 80}ms`}>
+            <span class="meta mono">
+              <span class="date">{shortDate(p.data.date)}<span class="m-only"> · {mins} min</span></span>
+              {r && <span class="res">{r.arrow ?? ''} <span data-count={r.count} data-dec={r.decimals}>{fmt(r.count, r.decimals)}</span>{r.suffix}</span>}
+            </span>
+            <span class="ttl">{p.data.title}</span>
+            <span class="topic mono">{p.data.shortTag ?? p.data.tag}</span>
+            <span class="min d mono">{mins} min</span>
+            <span class="read mono">Read</span>
+          </a>
+        );
+      })}
+
+    </section>
+  </main>
+</SiteLayout>

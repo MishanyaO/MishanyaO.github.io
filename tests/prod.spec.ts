@@ -1,25 +1,22 @@
 import { test, expect } from '@playwright/test';
 
-test('home renders the headline and the three icon buttons', async ({ page }) => {
+test('home renders the headline, stack and contact links', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Mike Olianenko' })).toBeVisible();
-  await expect(page.getByText('Product Engineer · Building software since 2022')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'LinkedIn', exact: true }).first()).toBeVisible();
-  const row = page.locator('.icons');
-  await expect(row.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/mikhail-olianenko/');
-  await expect(row.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/MishanyaO');
-  await expect(row.getByRole('link', { name: 'Email' })).toHaveAttribute('href', 'mailto:mikhail.olianenko@gmail.com');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('I build construction software end to end');
+  await expect(page.getByText('Product Engineer · since 2022')).toBeVisible();
+  const panel = page.getByRole('complementary', { name: 'Stack and links' });
+  await expect(panel.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/mikhail-olianenko/');
+  await expect(panel.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/MishanyaO');
 });
 
 test('theme toggle switches and persists after reload', async ({ page }) => {
   await page.goto('/');
   const html = page.locator('html');
   await expect(html).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button', { name: 'Switch to light mode' }).click();
+  await page.getByRole('button', { name: 'Toggle theme' }).click();
   await expect(html).toHaveAttribute('data-theme', 'light');
   await page.reload();
   await expect(html).toHaveAttribute('data-theme', 'light');
-  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toBeVisible();
 });
 
 test('no horizontal scroll at 390px', async ({ page }) => {
@@ -36,13 +33,21 @@ test('shows the empty writing line and generates no writing pages', async ({ pag
   expect(res.status()).toBe(404);
 });
 
-test('interactive targets are at least 44px', async ({ page }) => {
+test('mobile Stack button opens the drawer and Escape closes it', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  for (const loc of [page.locator('.nav a'), page.locator('.theme-btn'), page.locator('.icon-btn')]) {
-    for (const el of await loc.all()) {
-      const box = await el.boundingBox();
-      expect(box!.height).toBeGreaterThanOrEqual(44);
-      expect(box!.width).toBeGreaterThanOrEqual(44);
-    }
+  await page.getByRole('button', { name: 'Open stack' }).click();
+  await expect(page.getByRole('dialog', { name: 'Stack' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'Stack' })).toBeHidden();
+});
+
+test('mobile interactive targets are at least 44px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  for (const el of await page.locator('.menu-btn, .theme-btn, .contacts a').all()) {
+    const box = await el.boundingBox();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(box!.width).toBeGreaterThanOrEqual(44);
   }
 });
