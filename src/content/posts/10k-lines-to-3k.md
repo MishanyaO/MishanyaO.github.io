@@ -12,7 +12,6 @@ figures:
   - { label: Before, count: 10000, unit: lines, tone: bad }
   - { label: After, count: 3000, unit: lines, tone: good, mobileLabel: After · 3h }
   - { label: Time, value: ~3 hours }
-  - { label: Tests, value: passing }
 takeaways:
   - 'AI makes it easy to write code, and just as easy to write too much of it.'
   - 'Reviewing every change did not keep the prototype simple. Complexity arrives in many small steps that each look fine.'
