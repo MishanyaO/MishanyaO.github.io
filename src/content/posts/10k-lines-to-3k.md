@@ -4,8 +4,8 @@ tag: Agentic development
 shortTag: Agentic dev
 result: { arrow: ▼, count: 70, decimals: 1, suffix: '% LOC' }
 summary: Claude Code cut my agent prototype from 10,000 lines to 3,000 in about three hours, and the agent got better. Here is how complexity sneaks in, and the three habits we built afterwards.
-date: 2026-11-12
-draft: true
+date: 2026-11-17
+draft: false
 cover: /images/10k-lines-to-3k.png
 coverAlt: Two code blocks side by side. The left one is tall and labelled 10,000 lines. The right one is about a third of the size and labelled 3,000 lines.
 figures:
