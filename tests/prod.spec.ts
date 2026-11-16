@@ -26,9 +26,17 @@ test('no horizontal scroll at 390px', async ({ page }) => {
   expect(sw).toBeLessThanOrEqual(cw);
 });
 
-test('shows the empty writing line and generates no writing pages', async ({ page, request }) => {
+test('writing list shows published articles (or the empty line) and generates no fixture page', async ({ page, request }) => {
   await page.goto('/');
-  await expect(page.getByText('Longer pieces coming.')).toBeVisible();
+  const posts = page.locator('#writing a.post');
+  if ((await posts.count()) === 0) {
+    await expect(page.getByText('Longer pieces coming.')).toBeVisible();
+  } else {
+    // A published article is listed, and its page opens with the contents nav.
+    await posts.first().click();
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'On this page' }).getByRole('link').first()).toBeVisible();
+  }
   const res = await request.get('/writing/_fixture/');
   expect(res.status()).toBe(404);
 });
