@@ -2,9 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test('a post renders with the on-this-page nav, key figures and a working theme toggle', async ({ page }) => {
   // Uses the first article listed on the homepage. In dev, drafts are listed too.
-  await page.goto('/');
+  // Right after the dev server starts, the content store can still be loading and the first
+  // request lists nothing, so retry for a few seconds before concluding there are no articles.
   const first = page.locator('#writing a.post').first();
-  test.skip((await first.count()) === 0, 'No articles to check yet');
+  const found = await expect
+    .poll(async () => { await page.goto('/'); return first.count(); }, { timeout: 15_000 })
+    .toBeGreaterThan(0)
+    .then(() => true, () => false);
+  test.skip(!found, 'No articles to check yet');
   await first.click();
 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
