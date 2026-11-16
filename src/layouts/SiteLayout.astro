@@ -1,0 +1,107 @@
+---
+// Shared shell for every page, from the "Blog design overhaul" design:
+// head + theme bootstrap, header, footer, profile drawer, and the design script.
+import '@fontsource-variable/archivo';
+import '@fontsource-variable/geist-mono';
+import '@fontsource-variable/source-serif-4/opsz.css';
+import '@fontsource-variable/source-serif-4/opsz-italic.css';
+import '../styles/design.css';
+import '../styles/design-prose.css';
+import { site } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** home: status line in the header. post: "← Writing" link, progress bar. plain: neither. */
+  variant?: 'home' | 'post' | 'plain';
+  type?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+}
+const {
+  title = site.title,
+  description = site.description,
+  variant = 'plain',
+  type = 'website',
+  image,
+  imageAlt = '',
+} = Astro.props;
+
+const imageUrl = image ? new URL(image, site.url).href : undefined;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+<!doctype html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#0b0f12" />
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="en_AU" />
+  {imageUrl && <meta property="og:image" content={imageUrl} />}
+  {imageUrl && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+  {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+  <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <script is:inline>
+    (function () {
+      // Dark is the default; only an explicit "light" choice (saved by the theme button) overrides it.
+      var p = 'dark';
+      try { p = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.dataset.theme = p === 'light' ? 'light' : 'dark';
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip" href="#top">Skip to content</a>
+  {variant === 'post' && <div class="progress" aria-hidden="true"><i></i></div>}
+  <div class="page">
+    <div class={`glow${variant === 'post' ? ' glow--post' : ''}`} aria-hidden="true"></div>
+
+    <header class={`hdr${variant === 'post' ? ' hdr--post' : ''}`}>
+      {variant === 'post'
+        ? <div class="hdr-l"><a class="brand" href="/">OLIANENKO</a><a class="back mono" href="/#writing">← Writing</a></div>
+        : <a class="brand" href="/">OLIANENKO</a>}
+      <div class="hdr-meta mono">
+        <span class="d-only">MELBOURNE</span>
+        {variant === 'home' && <span class="status d-only">● open to chat</span>}
+        <button class="menu-btn mono" data-menu-open aria-controls="drawer" aria-expanded="false" aria-label="Open stack">STACK</button>
+        <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="foot mono">
+      <p>Coding is no longer the bottleneck.<br />{' '}Planning, testing, maintaining are.</p>
+    </footer>
+  </div>
+
+  <div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Stack">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="hdr"><span class="brand">OLIANENKO</span><button class="close-btn" data-menu-close aria-label="Close">×</button></div>
+    <div class="d-label mono rel">STACK</div>
+    <ul class="stack mono rel">
+      <li><span class="k lang">lang</span><span class="v">TypeScript</span></li>
+      <li><span class="k ui">ui</span><span class="v">React · MUI · Storybook</span></li>
+      <li><span class="k infra">infra</span><span class="v">AWS · Postgres</span></li>
+      <li><span class="k test">test</span><span class="v">Playwright · Jest</span></li>
+    </ul>
+  </div>
+
+  <script>
+    import '../scripts/design.js';
+  </script>
+  <slot name="end" />
+</body>
+</html>

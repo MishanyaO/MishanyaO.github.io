@@ -1,9 +1,10 @@
 ---
-import Base from '../layouts/Base.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 ---
-<Base title="Page not found | Mike Olianenko">
-  <div class="notfound">
-    <h1>Page not found</h1>
-    <a class="more" href="/">Home</a>
-  </div>
-</Base>
+<SiteLayout title="Page not found · Mike Olianenko">
+  <main id="top" tabindex="-1" class="rel" style="padding:96px 24px 128px;display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+    <div class="mono" style="font-size:12px;color:var(--muted);letter-spacing:.04em">404</div>
+    <h1 class="title" style="font-size:clamp(34px,6vw,56px)">Page not found</h1>
+    <a class="mono" href="/" style="font-size:13px;color:var(--accent)">← Home</a>
+  </main>
+</SiteLayout>

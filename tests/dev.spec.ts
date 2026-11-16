@@ -1,19 +1,26 @@
 import { test, expect } from '@playwright/test';
 
-test('a post renders with the on-this-page nav, and A+ grows the body text', async ({ page }) => {
+test('a post renders with the on-this-page nav, key figures and a working theme toggle', async ({ page }) => {
   // Uses the first article listed on the homepage. In dev, drafts are listed too.
-  await page.goto('/');
-  const first = page.locator('#writing h3 a').first();
-  test.skip((await first.count()) === 0, 'No articles to check yet');
+  // Right after the dev server starts, the content store can still be loading and the first
+  // request lists nothing, so retry for a few seconds before concluding there are no articles.
+  const first = page.locator('#writing a.post').first();
+  const found = await expect
+    .poll(async () => { await page.goto('/'); return first.count(); }, { timeout: 15_000 })
+    .toBeGreaterThan(0)
+    .then(() => true, () => false);
+  test.skip(!found, 'No articles to check yet');
   await first.click();
 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   const toc = page.getByRole('navigation', { name: 'On this page' });
   expect(await toc.getByRole('link').count()).toBeGreaterThan(0);
-  const size = () => page.locator('#post-body').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  const before = await size();
-  await page.getByRole('button', { name: 'Larger text' }).click();
-  expect(await size()).toBeGreaterThan(before);
+  await expect(page.locator('#post-body h2').first()).toBeVisible();
+
+  const html = page.locator('html');
+  const before = await html.getAttribute('data-theme');
+  await page.getByRole('button', { name: 'Toggle theme' }).click();
+  await expect(html).not.toHaveAttribute('data-theme', before!);
   await page.reload();
-  expect(await size()).toBeGreaterThan(before);
+  await expect(html).not.toHaveAttribute('data-theme', before!);
 });
